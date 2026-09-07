@@ -4,14 +4,14 @@
 
 <div align="center">
   <p>
-    <a href="https://github.com/Chasmical/flag-emojis-for-windows/releases">
-      <img src="https://img.shields.io/github/downloads/Chasmical/flag-emojis-for-windows/total?label=Downloads&style=flat" alt="Downloads"/>
+    <a href="https://github.com/Chasmical/pride-flag-emojis/releases">
+      <img src="https://img.shields.io/github/downloads/Chasmical/pride-flag-emojis/total?label=Downloads&style=flat" alt="Downloads"/>
     </a>
-    <a href="https://github.com/Chasmical/flag-emojis-for-windows/subscription">
-      <img src="https://img.shields.io/github/watchers/Chasmical/flag-emojis-for-windows?color=green&label=Watchers&style=flat" alt="Watchers"/>
+    <a href="https://github.com/Chasmical/pride-flag-emojis/subscription">
+      <img src="https://img.shields.io/github/watchers/Chasmical/pride-flag-emojis?color=green&label=Watchers&style=flat" alt="Watchers"/>
     </a>
-    <a href="https://github.com/Chasmical/flag-emojis-for-windows/stargazers">
-      <img src="https://img.shields.io/github/stars/Chasmical/flag-emojis-for-windows?color=green&label=Stars&style=flat" alt="Stars"/>
+    <a href="https://github.com/Chasmical/pride-flag-emojis/stargazers">
+      <img src="https://img.shields.io/github/stars/Chasmical/pride-flag-emojis?color=green&label=Stars&style=flat" alt="Stars"/>
     </a>
   </p>
 </div>
