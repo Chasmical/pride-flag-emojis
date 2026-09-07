@@ -1,0 +1,462 @@
+// ╔═════════════════════════════════════════════════════════════════════════════════╗
+// ║  Based on the script from https://github.com/Chasmical/flag-emojis-for-windows  ║
+// ╚═════════════════════════════════════════════════════════════════════════════════╝
+
+using System.Globalization;
+using System.Xml.Linq;
+
+var dir = Path.GetDirectoryName(Directory.GetCurrentDirectory());
+
+if (args.Length != 4) {
+    Console.WriteLine("[ERROR] Expected 4 arguments: seguiemj flags.color flags.bw merged");
+    Console.WriteLine($"Got {args.Length} arguments: {string.Join(" ", args.Select(x => $"\"{x}\""))}");
+    Environment.Exit(1);
+}
+
+// 's' prefix - segoe ui emoji, 't' prefix - twemoji
+var sdoc = XDocument.Load(Path.Join(dir, args[0])); // seguiemj.ttx
+var tdoc = XDocument.Load(Path.Join(dir, args[1])); // twemoji.flags.color.ttx
+var bwdoc = XDocument.Load(Path.Join(dir, args[2])); // twemoji.flags.bw.ttx
+var saveAs = Path.Join(dir, args[3]); // merged.ttx
+
+
+
+Dictionary<string, string> mapNames = [];
+Dictionary<string, string> mapBwNames = [];
+int nameId = 0;
+
+// Find the last assigned id
+var tglyphorder = tdoc.Root!.Element("GlyphOrder")!;
+var bwglyphorder = bwdoc.Root!.Element("GlyphOrder")!;
+var sglyphorder = sdoc.Root!.Element("GlyphOrder")!;
+
+static bool IsComponent(ReadOnlySpan<char> name)
+    => name is "uni200D" or "uni2764"
+    || name.StartsWith('u') && int.TryParse(name[1..], NumberStyles.HexNumber, null, out var cp)
+    && (cp is 0x1fa77 or 0x1f9e1 or 0x1f49b or 0x1f49a or 0x1f499 or 0x1fa75 or 0x1f49c
+    or 0x1f90e or 0x1f5a4 or 0x1fa76 or 0x1f90d);
+
+int idCounter = sglyphorder.Elements()
+    .Select(n => (int)n.Attribute("id")!).Max() + 1;
+
+// Add flag glyphs' ids to Segoe's <GlyphOrder>
+foreach (var glyphord in tglyphorder.Elements()) {
+    string oldName = glyphord.Attribute("name")!.Value;
+
+    // Don't redefine existing character ids
+    if (oldName is ".notdef" or "space" || IsComponent(oldName)) continue;
+    if (oldName.StartsWith('u') && sglyphorder.Elements().Any(x => x.Attribute("name")!.Value == oldName)) continue;
+
+    var newId = idCounter++;
+    string newName = oldName.StartsWith('u') ? oldName : $"prideflag{nameId++:00000}";
+    mapNames[oldName] = newName;
+    if (oldName.StartsWith('u')) mapBwNames[oldName] = newName;
+
+    sglyphorder.Add(new XElement("GlyphID", [
+        new XAttribute("id", newId),
+        new XAttribute("name", newName),
+    ]));
+}
+// Add glyphs' ids from B&W font (but not RIS or tags)
+foreach (var glyphord in bwglyphorder.Elements()) {
+    string oldName = glyphord.Attribute("name")!.Value;
+
+    if (oldName is ".notdef" or "space" || IsComponent(oldName)) continue;
+    if (oldName.StartsWith('u') && sglyphorder.Elements().Any(x => x.Attribute("name")!.Value == oldName)) continue;
+
+    var newId = idCounter++;
+    string newName = oldName.StartsWith('u') ? oldName : $"prideflag{nameId++:00000}";
+    mapBwNames[oldName] = newName;
+
+    sglyphorder.Add(new XElement("GlyphID", [
+        new XAttribute("id", newId),
+        new XAttribute("name", newName),
+    ]));
+}
+
+// Copy flag glyphs to Segoe's <glyf> (rename to avoid conflicts with Segoe)
+var tglyf = tdoc.Root!.Element("glyf")!;
+var bwglyf = bwdoc.Root!.Element("glyf")!;
+var sglyf = sdoc.Root!.Element("glyf")!;
+var sglyfCount = sglyf.Elements().Count();
+
+foreach (var ttglyph in tglyf.Elements()) {
+    string? name = mapNames.TryGetValue(ttglyph.Attribute("name")!.Value, out var xx) ? xx : null;
+    // Don't redefine existing character glyphs
+    if (name is null or ".notdef" or "space" ||
+        sglyf.Elements().Any(x => x.Attribute("name")!.Value == name)) continue;
+
+    var clone = new XElement(ttglyph);
+    clone.SetAttributeValue("name", name);
+    sglyf.Add(clone);
+
+    foreach (var comp in clone.Elements("component")) {
+        comp.SetAttributeValue("glyphName", mapNames[comp.Attribute("glyphName")!.Value]);
+    }
+}
+// Copy B&W glyphs (only flag glyphs)
+foreach (var ttglyph in bwglyf.Elements()) {
+    string name = ttglyph.Attribute("name")!.Value;
+    if (name is ".notdef" or "space" || IsComponent(name)) continue;
+    name = mapBwNames[name];
+
+    var clone = new XElement(ttglyph);
+    clone.SetAttributeValue("name", name);
+    sglyf.Add(clone);
+
+    foreach (var comp in clone.Elements("component")) {
+        comp.SetAttributeValue("glyphName", mapBwNames[comp.Attribute("glyphName")!.Value]);
+    }
+
+    if (name.StartsWith('u')) {
+        var color = sglyf.Elements().FirstOrDefault(x => x.Attribute("name")!.Value == name);
+        color?.Remove();
+    }
+}
+
+
+
+// Copy flag glyphs' <mtx> metadata to Segoe's <hmtx>
+var thmtx = tdoc.Root!.Element("hmtx")!;
+var bwhmtx = bwdoc.Root!.Element("hmtx")!;
+var shmtx = sdoc.Root!.Element("hmtx")!;
+foreach (var mtx in thmtx.Elements()) {
+    string? name = mapNames.TryGetValue(mtx.Attribute("name")!.Value, out var xx) ? xx : null;
+    // Don't redefine existing character metrics
+    if (name is null or ".notdef" or "space" ||
+        shmtx.Elements().Any(x => x.Attribute("name")!.Value == name)) continue;
+
+    var clone = new XElement(mtx);
+    clone.SetAttributeValue("name", name);
+    shmtx.Add(clone);
+}
+// Copy metrics for B&W (only flag glyphs)
+foreach (var mtx in bwhmtx.Elements()) {
+    string? name = mapBwNames.TryGetValue(mtx.Attribute("name")!.Value, out var xx) ? xx : null;
+    if (name is null or ".notdef" or "space" || IsComponent(name)) continue;
+
+    var clone = new XElement(mtx);
+    clone.SetAttributeValue("name", name);
+    shmtx.Add(clone);
+}
+
+
+
+// Copy flag glyphs' class defs to Segoe's <GDEF> (color and B&W glyphs)
+var sgdef = sdoc.Root!.Element("GDEF")!.Element("GlyphClassDef")!;
+foreach (var glyphName in mapNames.Values.Concat(mapBwNames.Values)) {
+    if (sgdef.Elements().Any(x => x.Attribute("glyph")!.Value == glyphName)) continue;
+    if (glyphName.StartsWith('u')) continue; // don't add a class to simple codepoints
+
+    var def = new XElement("ClassDef", [
+        new XAttribute("glyph", glyphName),
+        new XAttribute("class", "2"),
+    ]);
+    sgdef.Add(def);
+}
+
+
+
+// Determine duplicates or new ids for palettes
+Dictionary<string, int> colorToSegoeId = [];
+int dups = 0;
+
+var spalette = sdoc.Root!.Element("CPAL")!.Element("palette")!;
+var tpalette = tdoc.Root!.Element("CPAL")!.Element("palette")!;
+foreach (var entry in spalette.Elements()) {
+    var id = (int)entry.Attribute("index")!;
+    if (!colorToSegoeId.TryAdd(entry.Attribute("value")!.Value, id)) dups++;
+}
+Console.WriteLine($"Segoe palette duplicates: {dups}");
+var segoeColorCount = colorToSegoeId.Count;
+
+
+
+// Find best de-duplication similarity value
+static bool AreColorsSimilar(string a, string b, int sim) {
+    if (a.Length < 9 || b.Length < 9) return false;
+    var diff = (
+        Math.Abs(ParseHex(a[1], a[2]) - ParseHex(b[1], b[2])) +
+        Math.Abs(ParseHex(a[3], a[4]) - ParseHex(b[3], b[4])) +
+        Math.Abs(ParseHex(a[5], a[6]) - ParseHex(b[5], b[6])) +
+        Math.Abs(ParseHex(a[7], a[8]) - ParseHex(b[7], b[8]))
+    );
+    return diff <= sim;
+}
+static int ParseHex(char a, char b) {
+    int x = a - (a >= 'A' ? 'A' - 10 : '0');
+    int y = b - (b >= 'A' ? 'A' - 10 : '0');
+    return (x << 4) + y;
+}
+
+List<string> flagsColors = tpalette.Elements()!
+    .Select(x => x.Attribute("value")!.Value).ToList();
+List<string> uniqueFlagsColors = flagsColors;
+Dictionary<string, string> dissimilarColors = [];
+
+bool tooMany = segoeColorCount + flagsColors.Count >= ushort.MaxValue;
+Console.WriteLine($"{segoeColorCount} + {flagsColors.Count} - {(tooMany ? "too many" : "ok")}");
+
+int similarity = 1;
+while (tooMany) {
+    dissimilarColors.Clear();
+
+    uniqueFlagsColors = flagsColors.FindAll(c => {
+        foreach (string segoeColor in colorToSegoeId.Keys) {
+            if (ReferenceEquals(c, segoeColor)) continue;
+            if (dissimilarColors.ContainsKey(segoeColor)) continue;
+            if (AreColorsSimilar(c, segoeColor, similarity)) {
+                dissimilarColors.Add(c, segoeColor);
+                return false;
+            }
+        }
+        foreach (string otherColor in flagsColors) {
+            if (ReferenceEquals(c, otherColor)) continue;
+            if (dissimilarColors.ContainsKey(otherColor)) continue;
+            if (AreColorsSimilar(c, otherColor, similarity)) {
+                dissimilarColors.Add(c, otherColor);
+                return false;
+            }
+        }
+        return true;
+    });
+
+    tooMany = segoeColorCount + uniqueFlagsColors.Count >= ushort.MaxValue;
+    Console.WriteLine($"Tones lost <= {similarity} ({flagsColors.Count} => {uniqueFlagsColors.Count})");
+    Console.WriteLine($"{segoeColorCount} + {uniqueFlagsColors.Count} - {(tooMany ? "too many" : "ok")}");
+    similarity++;
+}
+
+
+
+// De-duplicate palette color ids
+var sPaletteNumEntries = sdoc.Root!.Element("CPAL")!.Element("numPaletteEntries")!;
+int paletteCounter = (int)sPaletteNumEntries.Attribute("value")!;
+
+Dictionary<string, int> colorToId = [];
+Dictionary<int, int> mapPaletteEntries = [];
+foreach (var (key, val) in colorToSegoeId) {
+    colorToId[key] = val;
+}
+
+foreach (var flagColor in uniqueFlagsColors) {
+    var tEntry = tpalette.Elements()
+        .First(e => e.Attribute("value")!.Value == flagColor);
+    var oldId = (int)tEntry.Attribute("index")!;
+
+    // Add to Segoe's <CPAL> with new id
+    int newId = paletteCounter++;
+    colorToId[flagColor] = newId;
+
+    mapPaletteEntries[oldId] = newId;
+    var clone = new XElement(tEntry);
+    clone.SetAttributeValue("index", newId);
+    spalette.Add(clone);
+}
+
+bool allDone = false;
+
+while (!allDone) {
+
+allDone = true;
+foreach (var flagColor in dissimilarColors.Keys) {
+    var tEntry = tpalette.Elements()
+        .First(e => e.Attribute("value")!.Value == flagColor);
+    var oldId = (int)tEntry.Attribute("index")!;
+
+    if (dissimilarColors.TryGetValue(flagColor, out var simColor)) {
+        // if duplicate, just add the existing id
+        if (colorToId.TryGetValue(simColor, out var id)) {
+            colorToId[flagColor] = id;
+            mapPaletteEntries[oldId] = id;
+        } else {
+            allDone = false;
+        }
+    }
+}
+
+}
+
+// Write new palette num entries
+var newPaletteSize = spalette.Elements().Count();
+sPaletteNumEntries.SetAttributeValue("value", newPaletteSize);
+
+
+
+var sname = sdoc.Root!.Element("name")!;
+{
+    sname.Add(new XElement("namerecord", [
+        new XAttribute("nameID", "10"),
+        new XAttribute("platformID", "3"),
+        new XAttribute("platEncID", "1"),
+        new XAttribute("langID", "0x409"),
+        "https://github.com/Chasmical/pride-flag-emojis",
+    ]));
+
+    var sample = sname.Elements("namerecord").First(x => x.Attribute("nameID")!.Value == "19")!;
+    sample.Value = "TODO: sample text";
+}
+
+
+
+List<(string glyph, List<(int colorId, string glyph)> Layers)> tColorGlyphs = [];
+
+var tbaseglyphrecs = tdoc.Root!.Element("COLR")!.Elements("ColorGlyph");
+foreach (var colorGlyph in tbaseglyphrecs) {
+    tColorGlyphs.Add((
+        colorGlyph.Attribute("name")!.Value,
+        colorGlyph.Elements().Select(x => {
+            return ((int)x.Attribute("colorID")!, x.Attribute("name")!.Value);
+        }).ToList()
+    ));
+}
+
+// Write COLRv0's BaseGlyphRecordArray and LayerRecordArray
+
+var sBaseGlyphRecords = sdoc.Root!.Element("COLR")!.Element("BaseGlyphRecordArray")!;
+var sLayerRecords = sdoc.Root!.Element("COLR")!.Element("LayerRecordArray")!;
+var sBaseGlyphRecordCount = sBaseGlyphRecords.Elements().Count();
+var sLayerRecordCount = sLayerRecords.Elements().Count();
+
+foreach (var (glyph, layers) in tColorGlyphs) {
+    if (glyph is ".notdef" or "space" || IsComponent(glyph)) throw new Exception();
+
+    sBaseGlyphRecords.Add(new XElement("BaseGlyphRecord", [
+        new XAttribute("index", sBaseGlyphRecordCount++),
+        new XElement("BaseGlyph", new XAttribute("value", mapNames[glyph])),
+        new XElement("FirstLayerIndex", new XAttribute("value", sLayerRecordCount)),
+        new XElement("NumLayers", new XAttribute("value", layers.Count)),
+    ]));
+
+    foreach (var (colorId, glyphName) in layers) {
+        sLayerRecords.Add(new XElement("LayerRecord", [
+            new XAttribute("index", sLayerRecordCount++),
+            new XElement("LayerGlyph", new XAttribute("value", mapNames[glyphName])),
+            new XElement("PaletteIndex", new XAttribute("value", mapPaletteEntries[colorId])),
+        ]));
+    }
+}
+
+// COLRv1 shouldn't be necessary because COLRv0 is present, but not all engines implement COLR
+// correctly and may freeze, break and crash if a COLRv1 font glyph only has COLRv0 data.
+// (see https://github.com/Chasmical/flag-emojis-for-windows/issues/16)
+//
+// Write COLRv1's BaseGlyphList and LayerRecordList
+
+var sBaseGlyphList = sdoc.Root!.Element("COLR")!.Element("BaseGlyphList")!;
+var sLayerList = sdoc.Root!.Element("COLR")!.Element("LayerList")!;
+var sClipList = sdoc.Root!.Element("COLR")!.Element("ClipList")!;
+var sBaseGlyphCount = sBaseGlyphList.Elements().Count();
+var sLayerCount = sLayerList.Elements().Count();
+
+foreach (var (glyph, layers) in tColorGlyphs) {
+    if (glyph is ".notdef" or "space" || IsComponent(glyph)) throw new Exception();
+
+    sBaseGlyphList.Add(new XElement("BaseGlyphPaintRecord", [
+        new XAttribute("index", sBaseGlyphCount++),
+        new XElement("BaseGlyph", new XAttribute("value", mapNames[glyph])),
+        new XElement("Paint", [
+            new XAttribute("Format", 1),
+            new XElement("NumLayers", new XAttribute("value", layers.Count)),
+            new XElement("FirstLayerIndex", new XAttribute("value", sLayerCount)),
+        ]),
+    ]));
+
+    foreach (var (colorId, glyphName) in layers) {
+        sLayerList.Add(new XElement("Paint", [
+            new XAttribute("index", sLayerCount++),
+            new XAttribute("Format", 10), // PaintGlyph
+            new XElement("Paint", [
+                new XAttribute("Format", 2),
+                new XElement("PaletteIndex", new XAttribute("value", mapPaletteEntries[colorId])),
+                new XElement("Alpha", new XAttribute("value", "1.0")),
+            ]),
+            new XElement("Glyph", new XAttribute("value", mapNames[glyphName])),
+        ]));
+    }
+
+    // Clip boxes should be optional, but not all font engines know that (e.g. QtWebEngine).
+    // (see https://github.com/Chasmical/flag-emojis-for-windows/issues/16)
+
+    var clip = sClipList.Elements().FirstOrDefault(clip => {
+        // Use the clip box of ⭕, which should be large enough
+        return clip.Elements("Glyph").Any(x => x.Attribute("value")!.Value is "uni2B55");
+    });
+
+    clip ??= sClipList.Elements().First();
+
+    clip.Add(new XElement("Glyph", new XAttribute("value", mapNames[glyph])));
+}
+
+
+
+// Note: Segoe's <cmap> already maps regional indicator symbols
+
+
+
+// Copy flag glyphs' ligatures to Segoe's <GSUB>
+var slookups = sdoc.Root!.Element("GSUB")!.Element("LookupList")!;
+var bwlookups = bwdoc.Root!.Element("GSUB")!.Element("LookupList")!;
+var tlookups = tdoc.Root!.Element("GSUB")!.Element("LookupList")!;
+var lookupCounter = slookups.Elements().Count();
+
+var sCcmpFeature = sdoc.Root!.Element("GSUB")!.Element("FeatureList")!.Elements("FeatureRecord")
+    .First(x => x.Element("FeatureTag")?.Attribute("value")!.Value == "ccmp")!.Element("Feature")!;
+
+List<XElement> addedLookups = [];
+foreach (var lookup in tlookups.Elements()) {
+    lookup.Attribute("index")!.SetValue(lookupCounter++);
+    foreach (var ligset in lookup.Elements("LigatureSubst").SelectMany(x => x.Elements("LigatureSet"))) {
+        foreach (var lig in ligset.Elements()) {
+            string name = lig.Attribute("glyph")!.Value;
+            lig.SetAttributeValue("glyph", mapNames[name]);
+        }
+    }
+    var lookupType = lookup.Element("LookupType")!.Attribute("value")!.Value;
+    if (lookupType == "4") {
+         sCcmpFeature.Add(new XElement("LookupListIndex", [
+             new XAttribute("index", sCcmpFeature.Elements().Count()),
+             new XAttribute("value", lookup.Attribute("index")!.Value),
+         ]));
+    }
+
+    var clone = new XElement(lookup);
+    slookups.Add(clone);
+    addedLookups.Add(clone);
+}
+
+foreach (var lookup in bwlookups.Elements()) {
+    foreach (var ligsub in lookup.Elements("LigatureSubst")) {
+        foreach (var ligset in ligsub.Elements("LigatureSet")) {
+            string ligStart = ligset.Attribute("glyph")!.Value;
+            foreach (var lig in ligset.Elements("Ligature")) {
+                string ligComponents = lig.Attribute("components")!.Value;
+                string ligGlyph = mapBwNames[lig.Attribute("glyph")!.Value];
+
+                var match = addedLookups.SelectMany(x => x.Elements("LigatureSubst"))
+                    .SelectMany(x => x.Elements("LigatureSet")).SelectMany(x => x.Elements("Ligature"))
+                    .First(x => x.Parent!.Attribute("glyph")!.Value == ligStart
+                        && x.Attribute("components")!.Value == ligComponents);
+
+                var colorLigGlyph = match.Attribute("glyph")!.Value;
+
+                // Color flags don't have proper glyf contours
+                var bwglyph = sglyf.Elements().First(x => x.Attribute("name")!.Value == ligGlyph);
+                var blankglyph = sglyf.Elements().First(x => x.Attribute("name")!.Value == colorLigGlyph);
+
+                // Replace color's blank glyph with B&W proper glyph
+                blankglyph.ReplaceNodes(bwglyph.Elements());
+                // Remove B&W glyph from everywhere else (color glyph now has both COLR and glyf data)
+                bwglyph.Remove();
+                sglyphorder.Elements().First(x => x.Attribute("name")!.Value == ligGlyph).Remove();
+                shmtx.Elements().First(x => x.Attribute("name")!.Value == ligGlyph).Remove();
+                sgdef.Elements().First(x => x.Attribute("glyph")!.Value == ligGlyph).Remove();
+            }
+        }
+    }
+}
+
+
+
+sdoc.Save(saveAs);
+Console.WriteLine("Done!");

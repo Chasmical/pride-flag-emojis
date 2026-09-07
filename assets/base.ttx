@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ttFont sfntVersion="\x00\x01\x00\x00" ttLibVersion="4.61">
+
+  <GlyphOrder>
+    <!-- .notdef and space -->
+    <GlyphID id="0" name=".notdef"/>
+    <GlyphID id="1" name="space"/>
+
+    <!-- 11 non-red hearts -->
+    <GlyphID id="2" name="u1F499"/>
+    <GlyphID id="3" name="u1F49A"/>
+    <GlyphID id="4" name="u1F49B"/>
+    <GlyphID id="5" name="u1F49C"/>
+    <GlyphID id="6" name="u1F5A4"/>
+    <GlyphID id="7" name="u1F90D"/>
+    <GlyphID id="8" name="u1F90E"/>
+    <GlyphID id="9" name="u1F9E1"/>
+    <GlyphID id="10" name="u1FA75"/>
+    <GlyphID id="11" name="u1FA76"/>
+    <GlyphID id="12" name="u1FA77"/>
+    <!-- ZWJ -->
+    <GlyphID id="13" name="uni200D"/>
+    <!-- The OG red heart -->
+    <GlyphID id="14" name="uni2764"/>
+  </GlyphOrder>
+
+  <head>
+    <!-- Most of this table will be recalculated by the compiler -->
+    <tableVersion value="1.0"/>
+    <fontRevision value="1.0"/>
+    <checkSumAdjustment value="0x3d504f4b"/>
+    <magicNumber value="0x5f0f3cf5"/>
+    <flags value="00000000 00000011"/>
+    <unitsPerEm value="2048"/>
+    <created value="Mon Sep  7 09:04:58 2026"/>
+    <modified value="Mon Sep  7 09:04:58 2026"/>
+    <xMin value="102"/>
+    <yMin value="-250"/>
+    <xMax value="2419"/>
+    <yMax value="1476"/>
+    <macStyle value="00000000 00000000"/>
+    <lowestRecPPEM value="6"/>
+    <fontDirectionHint value="2"/>
+    <indexToLocFormat value="0"/>
+    <glyphDataFormat value="0"/>
+  </head>
+
+  <hhea>
+    <tableVersion value="0x00010000"/>
+    <ascent value="950"/>
+    <descent value="-250"/>
+    <lineGap value="0"/>
+    <advanceWidthMax value="2812"/>
+    <minLeftSideBearing value="102"/>
+    <minRightSideBearing value="393"/>
+    <xMaxExtent value="2419"/>
+    <caretSlopeRise value="2048"/>
+    <caretSlopeRun value="0"/>
+    <caretOffset value="0"/>
+    <reserved0 value="0"/>
+    <reserved1 value="0"/>
+    <reserved2 value="0"/>
+    <reserved3 value="0"/>
+    <metricDataFormat value="0"/>
+    <numberOfHMetrics value="8"/>
+  </hhea>
+
+  <maxp>
+    <!-- Most of this table will be recalculated by the compiler -->
+    <tableVersion value="0x10000"/>
+    <numGlyphs value="12"/>
+    <maxPoints value="11"/>
+    <maxContours value="2"/>
+    <maxCompositePoints value="4"/>
+    <maxCompositeContours value="1"/>
+    <maxZones value="1"/>
+    <maxTwilightPoints value="0"/>
+    <maxStorage value="0"/>
+    <maxFunctionDefs value="0"/>
+    <maxInstructionDefs value="0"/>
+    <maxStackElements value="0"/>
+    <maxSizeOfInstructions value="0"/>
+    <maxComponentElements value="1"/>
+    <maxComponentDepth value="1"/>
+  </maxp>
+
+  <OS_2>
+    <!-- The fields 'usFirstCharIndex' and 'usLastCharIndex'
+         will be recalculated by the compiler -->
+    <version value="4"/>
+    <xAvgCharWidth value="2812"/>
+    <usWeightClass value="400"/>
+    <usWidthClass value="5"/>
+    <fsType value="00000000 00000100"/>
+    <ySubscriptXSize value="1331"/>
+    <ySubscriptYSize value="1229"/>
+    <ySubscriptXOffset value="0"/>
+    <ySubscriptYOffset value="154"/>
+    <ySuperscriptXSize value="1331"/>
+    <ySuperscriptYSize value="1229"/>
+    <ySuperscriptXOffset value="0"/>
+    <ySuperscriptYOffset value="717"/>
+    <yStrikeoutSize value="102"/>
+    <yStrikeoutPosition value="614"/>
+    <sFamilyClass value="0"/>
+    <panose>
+      <bFamilyType value="0"/>
+      <bSerifStyle value="0"/>
+      <bWeight value="0"/>
+      <bProportion value="0"/>
+      <bContrast value="0"/>
+      <bStrokeVariation value="0"/>
+      <bArmStyle value="0"/>
+      <bLetterForm value="0"/>
+      <bMidline value="0"/>
+      <bXHeight value="0"/>
+    </panose>
+    <ulUnicodeRange1 value="10000000 00000000 00000000 00000001"/>
+    <ulUnicodeRange2 value="00000010 00000000 00000000 00000000"/>
+    <ulUnicodeRange3 value="00000000 00000000 00000000 00000000"/>
+    <ulUnicodeRange4 value="00000000 00000000 00000000 00000000"/>
+    <achVendID value="NONE"/>
+    <fsSelection value="00000000 11000000"/>
+    <usFirstCharIndex value="32"/>
+    <usLastCharIndex value="65535"/>
+    <sTypoAscender value="950"/>
+    <sTypoDescender value="-250"/>
+    <sTypoLineGap value="0"/>
+    <usWinAscent value="950"/>
+    <usWinDescent value="250"/>
+    <ulCodePageRange1 value="00000000 00000000 00000000 00000001"/>
+    <ulCodePageRange2 value="00000000 00000000 00000000 00000000"/>
+    <sxHeight value="1024"/>
+    <sCapHeight value="1434"/>
+    <usDefaultChar value="0"/>
+    <usBreakChar value="32"/>
+    <usMaxContext value="7"/>
+  </OS_2>
+
+  <hmtx>
+    <mtx name=".notdef" width="2812" lsb="102"/>
+    <mtx name="space" width="2812" lsb="0"/>
+    <mtx name="u1F49B" width="0" lsb="0"/>
+    <mtx name="u1F49C" width="0" lsb="0"/>
+    <mtx name="u1F5A4" width="0" lsb="0"/>
+    <mtx name="u1F90D" width="0" lsb="0"/>
+    <mtx name="uni200D" width="0" lsb="0"/>
+
+    <!-- 11 non-red hearts -->
+    <mtx name="u1F499" width="0" lsb="0" />
+    <mtx name="u1F49A" width="0" lsb="0" />
+    <mtx name="u1F49B" width="0" lsb="0" />
+    <mtx name="u1F49C" width="0" lsb="0" />
+    <mtx name="u1F5A4" width="0" lsb="0" />
+    <mtx name="u1F90D" width="0" lsb="0" />
+    <mtx name="u1F90E" width="0" lsb="0" />
+    <mtx name="u1F9E1" width="0" lsb="0" />
+    <mtx name="u1FA75" width="0" lsb="0" />
+    <mtx name="u1FA76" width="0" lsb="0" />
+    <mtx name="u1FA77" width="0" lsb="0" />
+    <!-- ZWJ -->
+    <mtx name="uni200D" width="0" lsb="0" />
+    <!-- The OG red heart -->
+    <mtx name="uni2764" width="0" lsb="0" />
+  </hmtx>
+
+  <cmap>
+    <tableVersion version="0"/>
+    <cmap_format_4 platformID="0" platEncID="3" language="0">
+      <map code="0x20" name="space"/><!-- space -->
+      <map code="0x200D" name="uni200D"/><!-- ZWJ -->
+      <map code="0x2764" name="uni2764"/><!-- The OG red heart -->
+    </cmap_format_4>
+    <cmap_format_12 platformID="0" platEncID="4" format="12" reserved="0" length="76" language="0" nGroups="5">
+      <!-- space -->
+      <map code="0x20" name="space"/>
+      <!-- 11 non-red hearts -->
+      <map code="0x1F499" name="u1F499"/>
+      <map code="0x1F49A" name="u1F49A"/>
+      <map code="0x1F49B" name="u1F49B"/>
+      <map code="0x1F49C" name="u1F49C"/>
+      <map code="0x1F5A4" name="u1F5A4"/>
+      <map code="0x1F90D" name="u1F90D"/>
+      <map code="0x1F90E" name="u1F90E"/>
+      <map code="0x1F9E1" name="u1F9E1"/>
+      <map code="0x1FA75" name="u1FA75"/>
+      <map code="0x1FA76" name="u1FA76"/>
+      <map code="0x1FA77" name="u1FA77"/>
+      <!-- ZWJ -->
+      <map code="0x200D" name="uni200D"/>
+      <!-- The OG red heart -->
+      <map code="0x2764" name="uni2764"/>
+    </cmap_format_12>
+    <cmap_format_4 platformID="3" platEncID="1" language="0">
+      <map code="0x20" name="space"/><!-- space -->
+      <map code="0x200D" name="uni200D"/><!-- ZWJ -->
+      <map code="0x2764" name="uni2764"/><!-- The OG red heart -->
+    </cmap_format_4>
+    <cmap_format_12 platformID="3" platEncID="10" format="12" reserved="0" length="76" language="0" nGroups="5">
+      <!-- space -->
+      <map code="0x20" name="space"/>
+      <!-- 11 non-red hearts -->
+      <map code="0x1F499" name="u1F499"/>
+      <map code="0x1F49A" name="u1F49A"/>
+      <map code="0x1F49B" name="u1F49B"/>
+      <map code="0x1F49C" name="u1F49C"/>
+      <map code="0x1F5A4" name="u1F5A4"/>
+      <map code="0x1F90D" name="u1F90D"/>
+      <map code="0x1F90E" name="u1F90E"/>
+      <map code="0x1F9E1" name="u1F9E1"/>
+      <map code="0x1FA75" name="u1FA75"/>
+      <map code="0x1FA76" name="u1FA76"/>
+      <map code="0x1FA77" name="u1FA77"/>
+      <!-- ZWJ -->
+      <map code="0x200D" name="uni200D"/>
+      <!-- The OG red heart -->
+      <map code="0x2764" name="uni2764"/>
+    </cmap_format_12>
+  </cmap>
+
+  <loca>
+    <!-- The 'loca' table will be calculated by the compiler -->
+  </loca>
+
+  <glyf>
+
+    <!-- The xMin, yMin, xMax and yMax values
+         will be recalculated by the compiler. -->
+
+    <TTGlyph name=".notdef" xMin="102" yMin="-250" xMax="922" yMax="950">
+      <contour>
+        <pt x="102" y="-250" on="1"/>
+        <pt x="102" y="950" on="1"/>
+        <pt x="922" y="950" on="1"/>
+        <pt x="922" y="-250" on="1"/>
+      </contour>
+      <contour>
+        <pt x="204" y="-148" on="1"/>
+        <pt x="820" y="-148" on="1"/>
+        <pt x="820" y="848" on="1"/>
+        <pt x="204" y="848" on="1"/>
+      </contour>
+      <instructions/>
+    </TTGlyph>
+
+    <!-- space -->
+    <TTGlyph name="space"/>
+    <!-- 11 non-red hearts -->
+    <TTGlyph name="u1F499"/>
+    <TTGlyph name="u1F49A"/>
+    <TTGlyph name="u1F49B"/>
+    <TTGlyph name="u1F49C"/>
+    <TTGlyph name="u1F5A4"/>
+    <TTGlyph name="u1F90D"/>
+    <TTGlyph name="u1F90E"/>
+    <TTGlyph name="u1F9E1"/>
+    <TTGlyph name="u1FA75"/>
+    <TTGlyph name="u1FA76"/>
+    <TTGlyph name="u1FA77"/>
+    <!-- ZWJ -->
+    <TTGlyph name="uni200D"/>
+    <!-- The OG red heart -->
+    <TTGlyph name="uni2764"/>
+
+  </glyf>
+
+  <name>
+    <!-- Mac Roman encoded names (is it necessary? idk) -->
+    <namerecord nameID="0" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="1" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="2" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      Regular
+    </namerecord>
+    <namerecord nameID="3" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="4" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="5" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="6" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="7" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="8" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="11" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      https://github.com/Chasmical/pride-flag-emojis
+    </namerecord>
+    <namerecord nameID="13" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      TODO
+    </namerecord>
+    <namerecord nameID="14" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      https://github.com/Chasmical/pride-flag-emojis
+    </namerecord>
+
+    <!-- Windows UTF-16 encoded names -->
+    <namerecord nameID="0" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="1" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="2" platformID="3" platEncID="1" langID="0x409">
+      Regular
+    </namerecord>
+    <namerecord nameID="3" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="4" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="5" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="6" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="7" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="8" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="10" platformID="3" platEncID="1" langID="0x409">
+      https://github.com/Chasmical/pride-flag-emojis
+    </namerecord>
+    <namerecord nameID="11" platformID="3" platEncID="1" langID="0x409">
+      https://github.com/Chasmical/pride-flag-emojis
+    </namerecord>
+    <namerecord nameID="13" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+    <namerecord nameID="14" platformID="3" platEncID="1" langID="0x409">
+      https://github.com/Chasmical/pride-flag-emojis
+    </namerecord>
+    <namerecord nameID="19" platformID="3" platEncID="1" langID="0x409">
+      TODO
+    </namerecord>
+  </name>
+
+  <post>
+    <formatType value="3.0"/>
+    <italicAngle value="0.0"/>
+    <underlinePosition value="-154"/>
+    <underlineThickness value="102"/>
+    <isFixedPitch value="0"/>
+    <minMemType42 value="0"/>
+    <maxMemType42 value="0"/>
+    <minMemType1 value="0"/>
+    <maxMemType1 value="0"/>
+  </post>
+
+  <COLR>
+    <Version value="1"/>
+    <BaseGlyphRecordArray/>
+    <LayerRecordArray/>
+    <BaseGlyphList/>
+    <LayerList/>
+    <ClipList Format="1">
+      <Clip>
+        <ClipBox Format="1">
+          <xMin value="369"/>
+          <yMin value="-287"/>
+          <xMax value="2419"/>
+          <yMax value="1763"/>
+        </ClipBox>
+      </Clip>
+    </ClipList>
+  </COLR>
+
+  <CPAL>
+    <version value="0"/>
+    <numPaletteEntries value="0"/>
+    <palette index="0"/>
+  </CPAL>
+
+  <GDEF>
+    <Version value="0x00010000" />
+    <GlyphClassDef>
+    </GlyphClassDef>
+  </GDEF>
+
+  <GSUB>
+    <Version value="0x00010000"/>
+    <ScriptList>
+      <ScriptRecord index="0">
+        <ScriptTag value="DFLT"/>
+        <Script>
+          <DefaultLangSys>
+            <ReqFeatureIndex value="65535"/>
+            <FeatureIndex index="0" value="0"/>
+          </DefaultLangSys>
+        </Script>
+      </ScriptRecord>
+      <ScriptRecord index="1">
+        <ScriptTag value="latn"/>
+        <Script>
+          <DefaultLangSys>
+            <ReqFeatureIndex value="65535"/>
+            <FeatureIndex index="0" value="0"/>
+          </DefaultLangSys>
+        </Script>
+      </ScriptRecord>
+    </ScriptList>
+    <FeatureList>
+      <FeatureRecord index="0">
+        <FeatureTag value="ccmp"/>
+        <Feature>
+          <LookupListIndex index="0" value="0"/>
+        </Feature>
+      </FeatureRecord>
+    </FeatureList>
+    <LookupList>
+    </LookupList>
+  </GSUB>
+
+</ttFont>
